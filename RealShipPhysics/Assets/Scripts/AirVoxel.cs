@@ -22,17 +22,33 @@ public class AirVoxel : MonoBehaviour
         Volume = Mathf.Pow(VoxelLength, 3);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (Physics.Raycast(transform.position, Vector3.up, out var hitInfo, Mathf.Infinity, WaterLayer.value))
         {
             Depth = hitInfo.distance;
             BuoyancyForce = WaterDensity * Mathf.Abs(Physics.gravity.y) * Volume;
+
+            if (Depth < VoxelLength / 2)
+            {
+                var ratio = Depth / VoxelLength + 0.5f;
+                BuoyancyForce = ratio * BuoyancyForce;
+            }
         }
-        else
+        else if(Physics.Raycast(transform.position, Vector3.down, out hitInfo, Mathf.Infinity, WaterLayer.value))
         {
-            Depth = 0;
-            BuoyancyForce = 0;
+            if (hitInfo.distance > VoxelLength / 2)
+            {
+                Depth = 0;
+                BuoyancyForce = 0;
+            }
+            else
+            {
+                Depth = hitInfo.distance;
+
+                var ratio = ((VoxelLength / 2 - Depth) / VoxelLength);
+                BuoyancyForce = ratio * WaterDensity * Mathf.Abs(Physics.gravity.y) * Volume;
+            }
         }
 
         Pressure = WaterDensity * Mathf.Abs(Physics.gravity.y) * Depth + AtmosphericPressure;

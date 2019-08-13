@@ -33,15 +33,26 @@ public class AirArea : MonoBehaviour
     {
         var (voxelSize, startPoint, endPoint) = GetStartAndEndPointForGrid();
 
+        int xx = 0;
         for (var x = startPoint.x; x < endPoint.x; x += VoxelLength)
         {
+            int yy = 0;
             for (var y = startPoint.y; y < endPoint.y; y += VoxelLength)
             {
+                int zz = 0;
                 for (var z = startPoint.z; z < endPoint.z; z += VoxelLength)
                 {
+                    if(_airGrid != null)
+                    Gizmos.color = _airGrid[xx, yy, zz].BuoyancyForce > 150 / 2 ? Color.green : Color.red;
                     Gizmos.DrawWireCube(new Vector3(x, y, z), voxelSize);
+
+                    zz++;
                 }
+
+                yy++;
             }
+
+            xx++;
         }
     }
 

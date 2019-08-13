@@ -17,13 +17,13 @@ public class ShipPhysics : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         foreach (var area in AirAreas)
         {
             foreach (var voxel in area._airGrid)
             {
-                Rigidbody.AddForceAtPosition(new Vector3(0, voxel.BuoyancyForce / 10, 0), voxel.transform.position);
+                Rigidbody.AddForceAtPosition(new Vector3(0, voxel.BuoyancyForce, 0), voxel.transform.position, ForceMode.Force);
             }
         }
     }
