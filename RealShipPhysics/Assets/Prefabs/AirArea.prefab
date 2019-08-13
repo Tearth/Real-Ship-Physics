@@ -44,5 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Size: {x: 1, y: 1, z: 1}
+  VoxelLength: 1
   AirVoxelPrefab: {fileID: -8507085796650008213, guid: 859ef73eb7a96f44e9d84d0fbec06f65,
     type: 3}

@@ -43,3 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d4c360b4d9a2040893380b297c1bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WaterDensity: 1025
+  AtmosphericPressure: 101325
+  WaterLayer:
+    serializedVersion: 2
+    m_Bits: 16
+  Depth: 0
+  Pressure: 0
