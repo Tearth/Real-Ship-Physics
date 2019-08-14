@@ -34,7 +34,7 @@ public class AirArea : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        var startPoint = GetStartPointOfAirGrid();
+        var startPoint = transform.InverseTransformPoint(GetStartPointOfAirGrid());
         var cubeSize = VoxelLength * Vector3.one;
 
         for (var x = 0; x < Size.x; x++)
