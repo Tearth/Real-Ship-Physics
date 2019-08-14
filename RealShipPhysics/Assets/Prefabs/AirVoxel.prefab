@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WaterDensity: 1000
-  AtmosphericPressure: 101325
+  AtmPressure: 101325
   VoxelLength: 0
+  FloodLevel: 0
   WaterLayer:
     serializedVersion: 2
     m_Bits: 16

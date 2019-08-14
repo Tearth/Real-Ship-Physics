@@ -4,7 +4,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class AirArea : MonoBehaviour
 {
-    [Header("Area parameters")]
+    [Header("Parameters")]
     public Vector3Int Size;
     public float VoxelLength;
 

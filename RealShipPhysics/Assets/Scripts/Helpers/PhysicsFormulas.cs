@@ -3,6 +3,16 @@
 public static class PhysicsFormulas
 {
     /// <summary>
+    /// m = p * V, where
+    ///     p - density,
+    ///     h - volume
+    /// </summary>
+    public static float CalculateMass(float density, float volume)
+    {
+        return density * volume;
+    }
+
+    /// <summary>
     /// P_hyd_abs = p * g * h + P_atm, where
     ///     p - liquid density,
     ///     g - gravity force,
@@ -23,6 +33,16 @@ public static class PhysicsFormulas
     public static float CalculateAbsoluteHydrostaticPressure(float liquidDensity, float gravity, float depth)
     {
         return liquidDensity * Mathf.Abs(gravity) * depth;
+    }
+
+    /// <summary>
+    /// F_gra = m * g, where
+    ///     m - mass of the object,
+    ///     g - gravity force
+    /// </summary>
+    public static float CalculateGravityForce(float mass, float gravity)
+    {
+        return mass * gravity;
     }
 
     /// <summary>

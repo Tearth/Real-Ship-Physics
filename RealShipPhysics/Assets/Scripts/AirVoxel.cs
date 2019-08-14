@@ -5,8 +5,10 @@ public class AirVoxel : MonoBehaviour
 {
     [Header("Parameters")]
     public float WaterDensity;
-    public float AtmosphericPressure;
-    public float VoxelLength;
+    public float AtmPressure;
+
+    [Range(0, 100)]
+    public float FloodLevel;
 
     [Header("Other")]
     public LayerMask WaterLayer;
@@ -15,11 +17,17 @@ public class AirVoxel : MonoBehaviour
     [ReadOnlyField] public float Depth;
     [ReadOnlyField] public float Pressure;
     [ReadOnlyField] public float Volume;
+    [ReadOnlyField] public float MassWithWater;
     [ReadOnlyField] public float BuoyancyForce;
+    [ReadOnlyField] public float GravityForce;
+    [ReadOnlyField] public float TotalForce;
+
+    public float VoxelLength { get; set; }
 
     void Start()
     {
         Volume = Mathf.Pow(VoxelLength, 3);
+        MassWithWater = PhysicsFormulas.CalculateMass(Volume, WaterDensity);
     }
 
     void FixedUpdate()
@@ -79,6 +87,17 @@ public class AirVoxel : MonoBehaviour
             Depth = 0;
         }
 
-        Pressure = PhysicsFormulas.CalculateAbsoluteHydrostaticPressure(WaterDensity, Mathf.Abs(Physics.gravity.y), Depth, AtmosphericPressure);
+        // When air voxel is flood by water, it has smaller buoyancy force (because of less air) and generates
+        // additional gravity force (because of water inside)
+        if (FloodLevel > 0)
+        {
+            var ratio = FloodLevel / 100;
+
+            BuoyancyForce *= 1 - ratio;
+            GravityForce = ratio * PhysicsFormulas.CalculateGravityForce(MassWithWater, Mathf.Abs(Physics.gravity.y));
+        }
+
+        Pressure = PhysicsFormulas.CalculateAbsoluteHydrostaticPressure(WaterDensity, Mathf.Abs(Physics.gravity.y), Depth, AtmPressure);
+        TotalForce = BuoyancyForce - GravityForce;
     }
 }
