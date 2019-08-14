@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4484321222237357186}
   - component: {fileID: -8507085796650008213}
-  m_Layer: 0
+  - component: {fileID: -652743167143806469}
+  m_Layer: 8
   m_Name: AirVoxel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,12 +46,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WaterDensity: 1000
   AtmPressure: 101325
-  VoxelLength: 0
+  DragCoefficient: 0.8
   FloodLevel: 0
   WaterLayer:
     serializedVersion: 2
     m_Bits: 16
+  AirVoxelsLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  BoxCollider: {fileID: -652743167143806469}
   Depth: 0
   Pressure: 0
   Volume: 0
+  FaceArea: 0
+  MassWithWater: 0
   BuoyancyForce: 0
+  GravityForce: 0
+  DragForce: 0
+  Velocity: {x: 0, y: 0, z: 0}
+  TotalForce: {x: 0, y: 0, z: 0}
+  AffectedByDrag: 0
+--- !u!65 &-652743167143806469
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5410002404022696204}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

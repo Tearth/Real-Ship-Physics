@@ -22,7 +22,7 @@ public class ShipPhysics : MonoBehaviour
         {
             foreach (var voxel in area.AirGrid)
             {
-                ShipRigidbody.AddForceAtPosition(new Vector3(0, voxel.TotalForce, 0), voxel.transform.position);
+                ShipRigidbody.AddForceAtPosition(voxel.TotalForce, voxel.transform.position);
             }
         }
     }

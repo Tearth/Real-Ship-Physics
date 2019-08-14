@@ -55,4 +55,16 @@ public static class PhysicsFormulas
     {
         return liquidDensity * gravity * volume;
     }
+
+    /// <summary>
+    /// F_drag = C * g * v^2 * A / 2, where
+    ///     C - drag coefficient,
+    ///     p - fluid density,
+    ///     v - relative speed,
+    ///     A - area projected to the flow
+    /// </summary>
+    public static float CalculateDragForce(float dragCoefficient, float fluidDensity, float relativeSpeed, float area)
+    {
+        return dragCoefficient * fluidDensity * Mathf.Pow(relativeSpeed, 2) * area / 2;
+    }
 }
