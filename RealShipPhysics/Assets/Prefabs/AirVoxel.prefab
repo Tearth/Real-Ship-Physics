@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WaterDensity: 1000
   AtmPressure: 101325
-  DragCoefficient: 0.8
+  DragCoefficient: 1.1
   FloodLevel: 0
   WaterLayer:
     serializedVersion: 2
