@@ -24,33 +24,61 @@ public class AirVoxel : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Check if voxel is under or above the liquid
         if (Physics.Raycast(transform.position, Vector3.up, out var hitInfo, Mathf.Infinity, WaterLayer.value))
         {
-            Depth = hitInfo.distance;
-            BuoyancyForce = WaterDensity * Mathf.Abs(Physics.gravity.y) * Volume;
+            var ratio = 1f;
 
-            if (Depth < VoxelLength / 2)
+            // If voxel is half submerged (some of its part is above the liquid, but not more than 50%) then calculate
+            // how many buoyancy force should be decreased (part in air doesn't generate this force)
+            if (hitInfo.distance < VoxelLength / 2)
             {
-                var ratio = Depth / VoxelLength + 0.5f;
-                BuoyancyForce = ratio * BuoyancyForce;
+                //  Depth |     Voxel length    | Buoyancy ratio
+                // ---------------------------------------------
+                //   0.0  |         1.0         |     0.5
+                //   0.1  |         1.0         |     0.6
+                //   0.2  |         1.0         |     0.7
+                //   0.3  |         1.0         |     0.8
+                //   0.4  |         1.0         |     0.9
+                //   0.5  |         1.0         |     1.0
+                // ---------------------------------------------
+                // ratio = depth / voxel length + 0.5f
+                //
+                ratio = hitInfo.distance / VoxelLength + 0.5f;
             }
+
+            Depth = hitInfo.distance;
+            BuoyancyForce = ratio * PhysicsFormulas.CalculateBuoyancyForce(WaterDensity, Mathf.Abs(Physics.gravity.y), Volume);
         }
         else if(Physics.Raycast(transform.position, Vector3.down, out hitInfo, Mathf.Infinity, WaterLayer.value))
         {
-            if (hitInfo.distance > VoxelLength / 2)
+            // If voxel is half sticking out (some of its part is under the liquid, but not more than 50%) then calculate
+            // how many buoyancy force should be decreased (part in air doesn't generate this force)
+            if (hitInfo.distance < VoxelLength / 2)
             {
-                Depth = 0;
-                BuoyancyForce = 0;
+                //  Depth |     Voxel length    | Buoyancy ratio
+                // ---------------------------------------------
+                //   0.0  |         1.0         |     0.5
+                //   0.1  |         1.0         |     0.4
+                //   0.2  |         1.0         |     0.3
+                //   0.3  |         1.0         |     0.2
+                //   0.4  |         1.0         |     0.1
+                //   0.5  |         1.0         |     0.0
+                // ---------------------------------------------
+                // ratio = 1 - depth / voxel length - 0.5f
+                //
+                var ratio = 1 - hitInfo.distance / VoxelLength - 0.5f;
+
+                BuoyancyForce = ratio * PhysicsFormulas.CalculateBuoyancyForce(WaterDensity, Mathf.Abs(Physics.gravity.y), Volume);
             }
             else
             {
-                Depth = hitInfo.distance;
-
-                var ratio = ((VoxelLength / 2 - Depth) / VoxelLength);
-                BuoyancyForce = ratio * WaterDensity * Mathf.Abs(Physics.gravity.y) * Volume;
+                BuoyancyForce = 0;
             }
+
+            Depth = 0;
         }
 
-        Pressure = WaterDensity * Mathf.Abs(Physics.gravity.y) * Depth + AtmosphericPressure;
+        Pressure = PhysicsFormulas.CalculateAbsoluteHydrostaticPressure(WaterDensity, Mathf.Abs(Physics.gravity.y), Depth, AtmosphericPressure);
     }
 }

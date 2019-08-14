@@ -1,17 +1,20 @@
-﻿using System.Collections;
-using System.Numerics;
-using UnityEngine;
+﻿using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
 public class AirArea : MonoBehaviour
 {
+    [Header("Area parameters")]
     public Vector3Int Size;
-
     public float VoxelLength;
+
+    [Header("Prefabs")]
     public AirVoxel AirVoxelPrefab;
 
-    public AirVoxel[,,] _airGrid;
+    [Header("Gizmos")]
+    public float BuoyancyEdge;
+
+    public AirVoxel[,,] AirGrid { get; private set; }
 
     void Awake()
     {
@@ -31,28 +34,27 @@ public class AirArea : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        var (voxelSize, startPoint, endPoint) = GetStartAndEndPointForGrid();
+        var startPoint = GetStartPointOfAirGrid();
+        var cubeSize = VoxelLength * Vector3.one;
 
-        int xx = 0;
-        for (var x = startPoint.x; x < endPoint.x; x += VoxelLength)
+        for (var x = 0; x < Size.x; x++)
         {
-            int yy = 0;
-            for (var y = startPoint.y; y < endPoint.y; y += VoxelLength)
+            for (var y = 0; y < Size.y; y++)
             {
-                int zz = 0;
-                for (var z = startPoint.z; z < endPoint.z; z += VoxelLength)
+                for (var z = 0; z < Size.z; z++)
                 {
-                    if(_airGrid != null)
-                    Gizmos.color = _airGrid[xx, yy, zz].BuoyancyForce > 150 / 2 ? Color.green : Color.red;
-                    Gizmos.DrawWireCube(new Vector3(x, y, z), voxelSize);
+                    if (AirGrid != null && AirGrid.Length > 0)
+                    {
+                        var greenColor = Mathf.Clamp(AirGrid[x, y, z].BuoyancyForce / BuoyancyEdge, 0, 1);
+                        var redColor = Mathf.Clamp(1 - greenColor, 0, 1);
 
-                    zz++;
+                        Gizmos.color = new Color(redColor, greenColor, 0, 1);
+                    }
+
+                    Gizmos.matrix = transform.localToWorldMatrix;
+                    Gizmos.DrawWireCube(startPoint + VoxelLength * new Vector3(x, y, z), cubeSize);
                 }
-
-                yy++;
             }
-
-            xx++;
         }
     }
 
@@ -70,10 +72,10 @@ public class AirArea : MonoBehaviour
 
     private void GenerateAirGrid()
     {
-        _airGrid = new AirVoxel[Size.x, Size.y, Size.z];
+        AirGrid = new AirVoxel[Size.x, Size.y, Size.z];
 
         var id = 0;
-        var (voxelSize, startPoint, _) = GetStartAndEndPointForGrid();
+        var startPoint = GetStartPointOfAirGrid();
 
         for (var x = 0; x < Size.x; x++)
         {
@@ -81,23 +83,22 @@ public class AirArea : MonoBehaviour
             {
                 for (var z = 0; z < Size.z; z++)
                 {
-                    _airGrid[x, y, z] = Instantiate(AirVoxelPrefab, startPoint + Vector3.Scale(voxelSize, new Vector3(x, y, z)), Quaternion.identity, transform);
-                    _airGrid[x, y, z].name = $"AirVoxel {id++}";
-                    _airGrid[x, y, z].VoxelLength = VoxelLength;
+                    AirGrid[x, y, z] = Instantiate(AirVoxelPrefab, startPoint + VoxelLength * new Vector3(x, y, z), Quaternion.identity, transform);
+                    AirGrid[x, y, z].name = $"AirVoxel {id++}";
+                    AirGrid[x, y, z].VoxelLength = VoxelLength;
                 }
             }
         }
 
-        Debug.Log($"{_airGrid.Length} air voxels generated");
+        Debug.Log($"{AirGrid.Length} air voxels generated");
     }
 
-    private (Vector3 voxelSize, Vector3 startPoint, Vector3 endPoint) GetStartAndEndPointForGrid()
+    private Vector3 GetStartPointOfAirGrid()
     {
         var voxelSize = Vector3.one * VoxelLength;
         var centerOfArea = Vector3.Scale(Size, voxelSize) / 2 - (voxelSize / 2);
         var startPoint = transform.position - centerOfArea;
-        var endPoint = startPoint + (Vector3)Size * VoxelLength;
 
-        return (voxelSize, startPoint, endPoint);
+        return startPoint;
     }
 }

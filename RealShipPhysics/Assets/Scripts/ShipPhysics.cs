@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class ShipPhysics : MonoBehaviour
 {
-    public Rigidbody Rigidbody;
+    public Rigidbody ShipRigidbody;
     public List<AirArea> AirAreas;
 
     void Awake()
@@ -21,9 +20,9 @@ public class ShipPhysics : MonoBehaviour
     {
         foreach (var area in AirAreas)
         {
-            foreach (var voxel in area._airGrid)
+            foreach (var voxel in area.AirGrid)
             {
-                Rigidbody.AddForceAtPosition(new Vector3(0, voxel.BuoyancyForce, 0), voxel.transform.position, ForceMode.Force);
+                ShipRigidbody.AddForceAtPosition(new Vector3(0, voxel.BuoyancyForce, 0), voxel.transform.position);
             }
         }
     }
