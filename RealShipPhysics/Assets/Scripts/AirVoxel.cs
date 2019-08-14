@@ -37,7 +37,7 @@ public class AirVoxel : MonoBehaviour
     void Start()
     {
         Volume = Mathf.Pow(VoxelLength, 3);
-        FaceArea = Mathf.Pow(VoxelLength, 3);
+        FaceArea = Mathf.Pow(VoxelLength, 2);
         MassWithWater = PhysicsFormulas.CalculateMass(Volume, WaterDensity);
         BoxCollider.size = new Vector3(VoxelLength, VoxelLength, VoxelLength);
 
