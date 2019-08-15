@@ -54,10 +54,10 @@ public class AirVoxel : MonoBehaviour
 
     private void CalculateVelocity()
     {
-        Velocity = (transform.position - _oldPosition) / Time.deltaTime;
+        Velocity = (transform.position - _oldPosition) / Time.fixedDeltaTime;
         _oldPosition = transform.position;
 
-        AffectedByDrag = !Physics.Raycast(transform.position, Velocity, out var test, VoxelLength, AirVoxelsLayer.value);
+        AffectedByDrag = !Physics.Raycast(transform.position, Velocity, out _, VoxelLength, AirVoxelsLayer.value);
     }
 
     private void CalculateForces()

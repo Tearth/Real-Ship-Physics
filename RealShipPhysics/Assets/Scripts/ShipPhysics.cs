@@ -19,7 +19,6 @@ public class ShipPhysics : MonoBehaviour
 
     void FixedUpdate()
     {
-        ShipRigidbody.centerOfMass = MassCenter.transform.localPosition;
         foreach (var area in AirAreas)
         {
             foreach (var voxel in area.AirGrid)
