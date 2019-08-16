@@ -500,6 +500,11 @@ PrefabInstance:
       propertyPath: Size.y
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4095642274666387742, guid: 0f96784f80f585f4aaaf5b6e17d8f7d8,
+        type: 3}
+      propertyPath: BuoyancyEdge
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 4095642274666387743, guid: 0f96784f80f585f4aaaf5b6e17d8f7d8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -574,7 +579,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400034, guid: d4e11b9e630d2ed41bef099db564e5b4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400034, guid: d4e11b9e630d2ed41bef099db564e5b4, type: 3}
       propertyPath: m_LocalPosition.z
